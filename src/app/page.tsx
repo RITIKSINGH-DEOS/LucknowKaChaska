@@ -1,60 +1,12 @@
 import Link from "next/link";
+import { getAllPostRecords } from "@/lib/posts";
 
-interface FoodGuide {
-  title: string;
-  slug: string;
-  category: "Street Food" | "Biryani" | "Cafes" | "Breakfast";
-  area: string;
-  readTime: string;
-  updatedAt: string;
-  excerpt: string;
-  priceRange: string;
-}
+export const dynamic = "force-dynamic";
 
-const FEATURED_GUIDES: FoodGuide[] = [
-  {
-    title: "5 Best Kathi & Chicken Roll Spots in Gomti Nagar",
-    slug: "best-rolls-in-gomti-nagar",
-    category: "Street Food",
-    area: "Gomti Nagar",
-    readTime: "3 min read",
-    updatedAt: "Oct 2026",
-    excerpt: "From Manish Eating Point's legendary double chicken shawarma at Patrakarpuram to budget egg rolls at Manoj Pandey Chauraha. Complete 2026 price guide.",
-    priceRange: "₹80 – ₹160",
-  },
-  {
-    title: "Top 5 Authentic Awadhi Biryani Spots in Chowk (Beyond Tunday)",
-    slug: "best-biryani-in-chowk",
-    category: "Biryani",
-    area: "Chowk / Old City",
-    readTime: "4 min read",
-    updatedAt: "Oct 2026",
-    excerpt: "A deep dive into slow-cooked dum biryani in historic Chowk alleys. Detailed breakdown of Idris, Lalla, and hidden Akbari Gate handi secrets.",
-    priceRange: "₹120 – ₹220",
-  },
-  {
-    title: "7 Best Rooftop & Work-Friendly Cafes in Hazratganj",
-    slug: "best-cafes-in-hazratganj",
-    category: "Cafes",
-    area: "Hazratganj",
-    readTime: "4 min read",
-    updatedAt: "Oct 2026",
-    excerpt: "Looking for fast Wi-Fi, peaceful aesthetics, or romantic rooftop views? Here are Hazratganj's top-rated hangout spots with price-for-two breakdown.",
-    priceRange: "₹400 – ₹900 for two",
-  },
-  {
-    title: "Top 5 Breakfast Khasta Kachori Spots in Old Lucknow",
-    slug: "best-khasta-lucknow",
-    category: "Breakfast",
-    area: "Aminabad & Chowk",
-    readTime: "3 min read",
-    updatedAt: "Oct 2026",
-    excerpt: "Crispy flaky khasta paired with spicy urad dal and tangy aloo-chhole sabzi. Why morning foodies swear by Bajpayee, Durga, and Rathore.",
-    priceRange: "₹30 – ₹60 per plate",
-  },
-];
+export default async function HomePage() {
+  const allPosts = await getAllPostRecords();
+  const publishedPosts = allPosts.filter((p) => p.status === "PUBLISHED");
 
-export default function HomePage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Hero Header */}
@@ -64,7 +16,7 @@ export default function HomePage() {
           Hyper-Local Food Authority • Lucknow, UP
         </div>
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-neutral-900 leading-[1.1] mb-5">
-          The Honest Lucknow Food & Street Eat Guide<span className="text-neutral-400">.</span>
+          The Honest Lucknow Food &amp; Street Eat Guide<span className="text-neutral-400">.</span>
         </h1>
         <p className="text-base sm:text-lg text-neutral-600 max-w-2xl leading-relaxed mb-6">
           No paid PR rankings. Just verified on-ground prices, landmark locations, and authentic Awadhi street recommendations curated by Lucknowites who eat here daily.
@@ -112,12 +64,12 @@ export default function HomePage() {
             Latest Curated Guides
           </h2>
           <span className="text-xs font-mono text-neutral-500">
-            Showing {FEATURED_GUIDES.length} Verified Entries
+            Showing {publishedPosts.length} Verified Entries
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {FEATURED_GUIDES.map((guide) => (
+          {publishedPosts.map((guide) => (
             <article
               key={guide.slug}
               className="border border-neutral-200 rounded-lg p-6 bg-white hover:border-neutral-900 transition-all flex flex-col justify-between group"
@@ -133,13 +85,13 @@ export default function HomePage() {
                   <Link href={`/posts/${guide.slug}`}>{guide.title}</Link>
                 </h3>
                 <p className="text-xs text-neutral-600 leading-relaxed mb-4">
-                  {guide.excerpt}
+                  {guide.metaDescription}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs">
                 <span className="font-mono text-neutral-500">
-                  Est. Cost: <strong className="text-neutral-900">{guide.priceRange}</strong>
+                  Quick Verdict: <strong className="text-neutral-900">{guide.comparisonTable[0]?.spotName || "Verified"}</strong>
                 </span>
                 <Link
                   href={`/posts/${guide.slug}`}
