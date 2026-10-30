@@ -10,7 +10,7 @@ export default async function HomePage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Hero Header */}
-      <section className="mb-14 pb-12 border-b border-neutral-200">
+      <section className="mb-12 pb-10 border-b border-neutral-200">
         <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-neutral-100 text-[11px] font-mono uppercase tracking-wider text-neutral-700 mb-4">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           Hyper-Local Food Authority • Lucknow, UP
@@ -34,26 +34,6 @@ export default async function HomePage() {
               </span>
             )
           )}
-        </div>
-      </section>
-
-      {/* Trust & Performance Metrics Callout */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 border border-neutral-200 rounded-lg bg-neutral-50 mb-14 text-center">
-        <div>
-          <div className="text-lg font-black text-neutral-900">0.3s</div>
-          <div className="text-[11px] font-mono text-neutral-500 uppercase">Load Latency</div>
-        </div>
-        <div>
-          <div className="text-lg font-black text-neutral-900">100%</div>
-          <div className="text-[11px] font-mono text-neutral-500 uppercase">On-Ground Verified</div>
-        </div>
-        <div>
-          <div className="text-lg font-black text-neutral-900">&lt; 38 KB</div>
-          <div className="text-[11px] font-mono text-neutral-500 uppercase">Image Payloads</div>
-        </div>
-        <div>
-          <div className="text-lg font-black text-neutral-900">EN / HI</div>
-          <div className="text-[11px] font-mono text-neutral-500 uppercase">Dual Vernacular</div>
         </div>
       </section>
 
