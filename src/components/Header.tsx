@@ -6,12 +6,9 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-neutral-200">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand Identity */}
-        <Link href="/" className="flex flex-col group">
-          <span className="font-extrabold text-lg sm:text-xl tracking-tight text-neutral-900 group-hover:opacity-80 transition-opacity">
+        <Link href="/" className="flex items-center group">
+          <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-neutral-900 group-hover:opacity-80 transition-opacity">
             LucknowKaChaska<span className="text-neutral-400">.</span>
-          </span>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">
-            food.ritiksingh.in
           </span>
         </Link>
 
@@ -24,7 +21,7 @@ export default function Header() {
             Cafes
           </Link>
           <Link href="/#biryani" className="hover:text-black transition-colors">
-            Biryani & Kebabs
+            Biryani &amp; Kebabs
           </Link>
           <Link href="/about" className="hover:text-black transition-colors">
             About
