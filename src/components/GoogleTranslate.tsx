@@ -24,7 +24,7 @@ export default function GoogleTranslate() {
   const [currentLang, setCurrentLang] = useState<"en" | "hi">("en");
 
   useEffect(() => {
-    // Check existing cookie
+    // 1. Detect current language from cookies
     const cookies = document.cookie.split(";");
     const transCookie = cookies.find((c) => c.trim().startsWith("googtrans="));
     if (transCookie && transCookie.includes("/en/hi")) {
@@ -33,7 +33,28 @@ export default function GoogleTranslate() {
       setCurrentLang("en");
     }
 
-    // Initialize hidden Google Translate element
+    // 2. Lock body at top: 0 to prevent any header hiding
+    const lockBodyAtTop = () => {
+      if (document.body.style.top && document.body.style.top !== "0px") {
+        document.body.style.setProperty("top", "0px", "important");
+      }
+      if (document.body.style.position && document.body.style.position !== "static") {
+        document.body.style.setProperty("position", "static", "important");
+      }
+      const banner = document.querySelector(".goog-te-banner-frame");
+      if (banner) {
+        banner.remove();
+      }
+    };
+
+    lockBodyAtTop();
+    const observer = new MutationObserver(lockBodyAtTop);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+
+    // 3. Initialize Google Translate engine
     window.googleTranslateElementInit = () => {
       if (window.google?.translate?.TranslateElement) {
         new window.google.translate.TranslateElement(
@@ -42,7 +63,7 @@ export default function GoogleTranslate() {
             includedLanguages: "en,hi",
             autoDisplay: false,
           },
-          "google_translate_hidden"
+          "google_translate_hidden_target"
         );
       }
     };
@@ -55,33 +76,70 @@ export default function GoogleTranslate() {
       script.async = true;
       document.body.appendChild(script);
     }
+
+    return () => observer.disconnect();
   }, []);
 
-  const switchLanguage = (lang: "en" | "hi") => {
-    if (lang === currentLang) return;
+  // Helper to completely purge all Google Translate cookies
+  const clearGoogleTranslateCookies = () => {
+    const hostname = window.location.hostname;
+    const domains = [
+      "",
+      hostname,
+      `.${hostname}`,
+      hostname.replace(/^www\./, ""),
+      `.${hostname.replace(/^www\./, "")}`,
+    ];
 
-    // Set google translate cookies
-    document.cookie = `googtrans=/en/${lang}; path=/;`;
-    if (window.location.hostname) {
-      document.cookie = `googtrans=/en/${lang}; path=/; domain=${window.location.hostname};`;
-      document.cookie = `googtrans=/en/${lang}; path=/; domain=.${window.location.hostname};`;
+    for (const d of domains) {
+      const domainStr = d ? `; domain=${d}` : "";
+      document.cookie = `googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT${domainStr}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT${domainStr}`;
+    }
+  };
+
+  const switchLanguage = (targetLang: "en" | "hi") => {
+    if (targetLang === currentLang) return;
+    setCurrentLang(targetLang);
+
+    // Smooth soft fade before transition
+    document.body.style.transition = "opacity 0.15s ease-out";
+    document.body.style.opacity = "0.5";
+
+    if (targetLang === "hi") {
+      // Set cookie for Hindi
+      const hostname = window.location.hostname;
+      document.cookie = "googtrans=/en/hi; path=/;";
+      if (hostname) {
+        document.cookie = `googtrans=/en/hi; path=/; domain=${hostname};`;
+        document.cookie = `googtrans=/en/hi; path=/; domain=.${hostname};`;
+      }
+    } else {
+      // Completely erase cookies to restore original English
+      clearGoogleTranslateCookies();
     }
 
-    setCurrentLang(lang);
-    window.location.reload();
+    // Fast soft reload (150ms)
+    setTimeout(() => {
+      window.location.reload();
+    }, 150);
   };
 
   return (
     <div className="flex items-center">
-      {/* Hidden container for Google script execution */}
-      <div id="google_translate_hidden" className="hidden" aria-hidden="true"></div>
+      {/* Hidden target for Google Translate script */}
+      <div
+        id="google_translate_hidden_target"
+        className="fixed -top-[9999px] -left-[9999px] opacity-0 pointer-events-none"
+        aria-hidden="true"
+      ></div>
 
-      {/* Modern Minimalist B&W Pill Switcher */}
+      {/* Modern High-Contrast Minimalist Pill Toggle */}
       <div className="inline-flex items-center rounded border border-neutral-300 bg-white p-0.5 text-xs font-mono shadow-sm">
         <button
           type="button"
           onClick={() => switchLanguage("en")}
-          className={`rounded px-2 py-1 transition-all ${
+          className={`rounded px-2.5 py-1 transition-all ${
             currentLang === "en"
               ? "bg-neutral-900 text-white font-bold"
               : "text-neutral-600 hover:text-neutral-900"
