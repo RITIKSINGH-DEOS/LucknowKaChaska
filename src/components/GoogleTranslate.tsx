@@ -12,7 +12,6 @@ declare global {
             pageLanguage: string;
             includedLanguages: string;
             autoDisplay?: boolean;
-            multilanguagePage?: boolean;
           },
           element: string
         ) => void;
@@ -25,7 +24,7 @@ export default function GoogleTranslate() {
   const [currentLang, setCurrentLang] = useState<"en" | "hi">("en");
 
   useEffect(() => {
-    // 1. Check existing cookie
+    // 1. Check existing cookie preference
     const cookies = document.cookie.split(";");
     const transCookie = cookies.find((c) => c.trim().startsWith("googtrans="));
     if (transCookie && transCookie.includes("/en/hi")) {
@@ -34,7 +33,7 @@ export default function GoogleTranslate() {
       setCurrentLang("en");
     }
 
-    // 2. Active Body Top-Shift Killer (Prevents Google from pushing header down)
+    // 2. Continuous Anti-Shift Guardian: keeps body top locked to 0
     const resetBodyShift = () => {
       if (document.body.style.top && document.body.style.top !== "0px") {
         document.body.style.setProperty("top", "0px", "important");
@@ -42,7 +41,6 @@ export default function GoogleTranslate() {
       if (document.body.style.position && document.body.style.position !== "static") {
         document.body.style.setProperty("position", "static", "important");
       }
-      // Also remove any injected banner iframes
       const banner = document.querySelector(".goog-te-banner-frame");
       if (banner) {
         banner.remove();
@@ -56,7 +54,7 @@ export default function GoogleTranslate() {
       attributeFilter: ["style", "class"],
     });
 
-    // 3. Initialize hidden Google Translate element
+    // 3. Initialize Google Translate with hidden target
     window.googleTranslateElementInit = () => {
       if (window.google?.translate?.TranslateElement) {
         new window.google.translate.TranslateElement(
@@ -64,9 +62,8 @@ export default function GoogleTranslate() {
             pageLanguage: "en",
             includedLanguages: "en,hi",
             autoDisplay: false,
-            multilanguagePage: true,
           },
-          "google_translate_hidden"
+          "google_translate_hidden_target"
         );
       }
     };
@@ -83,31 +80,52 @@ export default function GoogleTranslate() {
     return () => observer.disconnect();
   }, []);
 
-  const switchLanguage = (lang: "en" | "hi") => {
-    if (lang === currentLang) return;
+  // Instant in-place smooth language switcher (Zero Page Reload!)
+  const switchLanguage = (targetLang: "en" | "hi") => {
+    if (targetLang === currentLang) return;
+    setCurrentLang(targetLang);
 
-    // Set google translate cookies
-    document.cookie = `googtrans=/en/${lang}; path=/;`;
+    // Save cookie for persistence across pages
+    document.cookie = `googtrans=/en/${targetLang}; path=/;`;
     if (window.location.hostname) {
-      document.cookie = `googtrans=/en/${lang}; path=/; domain=${window.location.hostname};`;
-      document.cookie = `googtrans=/en/${lang}; path=/; domain=.${window.location.hostname};`;
+      document.cookie = `googtrans=/en/${targetLang}; path=/; domain=${window.location.hostname};`;
+      document.cookie = `googtrans=/en/${targetLang}; path=/; domain=.${window.location.hostname};`;
     }
 
-    setCurrentLang(lang);
+    // 1. Try instant in-place DOM translation via Google Translate Select Combo
+    const selectEl = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+    if (selectEl) {
+      selectEl.value = targetLang === "hi" ? "hi" : "";
+      selectEl.dispatchEvent(new Event("change", { bubbles: true }));
+
+      // Also handle restoration if switching to English
+      if (targetLang === "en") {
+        // Click Google original banner close button if present
+        const closeBtn = document.querySelector<HTMLAnchorElement>(".goog-te-banner-frame .goog-close-link");
+        if (closeBtn) closeBtn.click();
+      }
+      return;
+    }
+
+    // 2. Fallback only if Google script hasn't mounted the combo element yet
     window.location.reload();
   };
 
   return (
     <div className="flex items-center">
-      {/* Hidden container for Google script execution */}
-      <div id="google_translate_hidden" className="hidden" aria-hidden="true"></div>
+      {/* Hidden off-screen anchor for Google Translate combo */}
+      <div
+        id="google_translate_hidden_target"
+        className="fixed -top-[9999px] -left-[9999px] opacity-0 pointer-events-none"
+        aria-hidden="true"
+      ></div>
 
-      {/* Modern Minimalist B&W Pill Switcher */}
+      {/* Modern High-Contrast Minimalist Pill Toggle */}
       <div className="inline-flex items-center rounded border border-neutral-300 bg-white p-0.5 text-xs font-mono shadow-sm">
         <button
           type="button"
           onClick={() => switchLanguage("en")}
-          className={`rounded px-2 py-1 transition-all ${
+          className={`rounded px-2.5 py-1 transition-all ${
             currentLang === "en"
               ? "bg-neutral-900 text-white font-bold"
               : "text-neutral-600 hover:text-neutral-900"

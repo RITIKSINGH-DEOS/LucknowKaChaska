@@ -49,6 +49,12 @@ iframe.skiptranslate,
   box-shadow: none !important;
 }
 
+/* Smooth fade transition for translated text elements */
+font {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
