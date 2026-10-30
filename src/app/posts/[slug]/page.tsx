@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getAllPostRecords, getPostRecordBySlug } from "@/lib/posts";
-import { parseMarkdownToHtml, formatInlineMarkdown } from "@/lib/markdown";
+
 
 interface PostPageProps {
   params: Promise<{
@@ -204,7 +204,8 @@ export default async function PostDetailPage({ params }: PostPageProps) {
               Quick Verdict
             </span>
           </div>
-          <p className="text-sm font-medium text-neutral-800 leading-relaxed" dangerouslySetInnerHTML={{ __html: formatInlineMarkdown(post.quickVerdict) }}>
+          <p className="text-sm font-medium text-neutral-800 leading-relaxed">
+            {post.quickVerdict.replace(/\*\*/g, "")}
 
           </p>
         </div>
@@ -258,7 +259,12 @@ export default async function PostDetailPage({ params }: PostPageProps) {
         <div
           className="prose prose-neutral max-w-none space-y-4"
           dangerouslySetInnerHTML={{
-            __html: parseMarkdownToHtml(post.contentMarkdown),
+            __html: post.contentMarkdown
+              .replace(/## (.*?)\n/g, '<h2 class="text-xl font-bold text-neutral-900 pt-4 mt-6 border-t border-neutral-100">$1</h2>')
+              .replace(/\* \*\*(.*?):\*\* (.*?)(?:\n|$)/g, '<div class="text-xs my-1.5"><strong class="text-neutral-900 font-mono">$1:</strong> <span class="text-neutral-700">$2</span></div>')
+              .replace(/\*\*/g, "")
+              .replace(/\n\n/g, "<p class='text-sm text-neutral-700 leading-relaxed my-3'></p>")
+              .replace(/---/g, '<hr class="my-6 border-neutral-200" />'),
 
 
 
