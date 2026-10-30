@@ -384,7 +384,7 @@ export default function NewPostPage() {
         {/* Position #0 AEO Quick Verdict Box */}
         <div className="p-4 border border-neutral-300 rounded-lg bg-neutral-50">
           <label className="block text-xs font-mono uppercase font-bold text-neutral-900 mb-1">
-            ⚡ Position #0 Quick Verdict (AEO Snippet — 40-50 Words)
+            ⚡ Quick Verdict (Summary — 40-50 Words)
           </label>
           <textarea
             rows={3}

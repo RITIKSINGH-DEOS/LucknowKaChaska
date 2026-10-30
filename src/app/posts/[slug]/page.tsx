@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllPostRecords, getPostRecordBySlug } from "@/lib/posts";
 
+
 interface PostPageProps {
   params: Promise<{
     slug: string;
@@ -200,11 +201,12 @@ export default async function PostDetailPage({ params }: PostPageProps) {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-sm">⚡</span>
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-900">
-              Quick Verdict (Google Position #0 &amp; Voice Answer)
+              Quick Verdict
             </span>
           </div>
           <p className="text-sm font-medium text-neutral-800 leading-relaxed">
-            {post.quickVerdict}
+            {post.quickVerdict.replace(/\*\*/g, "")}
+
           </p>
         </div>
       )}
@@ -259,9 +261,14 @@ export default async function PostDetailPage({ params }: PostPageProps) {
           dangerouslySetInnerHTML={{
             __html: post.contentMarkdown
               .replace(/## (.*?)\n/g, '<h2 class="text-xl font-bold text-neutral-900 pt-4 mt-6 border-t border-neutral-100">$1</h2>')
-              .replace(/\* \*\*(.*?):\*\* (.*?)\n/g, '<div class="text-xs my-1.5"><strong class="text-neutral-900 font-mono">$1:</strong> <span class="text-neutral-700">$2</span></div>')
+              .replace(/\* \*\*(.*?):\*\* (.*?)(?:\n|$)/g, '<div class="text-xs my-1.5"><strong class="text-neutral-900 font-mono">$1:</strong> <span class="text-neutral-700">$2</span></div>')
+              .replace(/\*\*/g, "")
               .replace(/\n\n/g, "<p class='text-sm text-neutral-700 leading-relaxed my-3'></p>")
               .replace(/---/g, '<hr class="my-6 border-neutral-200" />'),
+
+
+
+
           }}
         />
       </section>
