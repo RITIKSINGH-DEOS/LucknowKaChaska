@@ -1,11 +1,22 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getAllPostRecords } from "@/lib/posts";
+import AdminLoginForm from "@/components/AdminLoginForm";
+import AdminLogoutButton from "@/components/AdminLogoutButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  const posts = await getAllPostRecords();
+  const cookieStore = await cookies();
+  const session = cookieStore.get("admin_session");
+  const isAuthenticated = session?.value === "authenticated_ritik_session";
 
+  // Gatekeeper: If unauthenticated, render the Email + Password Login Form
+  if (!isAuthenticated) {
+    return <AdminLoginForm />;
+  }
+
+  const posts = await getAllPostRecords();
   const publishedCount = posts.filter((p) => p.status === "PUBLISHED").length;
   const draftCount = posts.filter((p) => p.status === "DRAFT").length;
 
@@ -14,9 +25,14 @@ export default async function AdminDashboardPage() {
       {/* Admin Header */}
       <div className="border-b border-neutral-200 pb-8 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-1">
-            Publishing &amp; Content Management
-          </span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block">
+              Publishing &amp; Content Management
+            </span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-neutral-900 text-white">
+              Authenticated
+            </span>
+          </div>
           <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 tracking-tight">
             LucknowKaChaska Admin Console<span className="text-neutral-400">.</span>
           </h1>
@@ -25,12 +41,15 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
-        <Link
-          href="/admin/new"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 text-white text-xs font-mono font-bold rounded hover:bg-neutral-800 transition-colors shadow-sm"
-        >
-          <span>✨ New Post (AI or Manual)</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <AdminLogoutButton />
+          <Link
+            href="/admin/new"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-neutral-900 text-white text-xs font-mono font-bold rounded hover:bg-neutral-800 transition-colors shadow-sm"
+          >
+            <span>✨ New Post</span>
+          </Link>
+        </div>
       </div>
 
       {/* Metrics Bar */}

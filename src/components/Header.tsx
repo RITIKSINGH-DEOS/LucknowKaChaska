@@ -28,15 +28,9 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Translation Widget & Admin Link */}
+        {/* Translation Widget (Admin link completely removed from public view) */}
         <div className="flex items-center gap-3">
           <GoogleTranslate />
-          <Link
-            href="/admin"
-            className="text-xs font-mono font-medium px-2.5 py-1.5 border border-neutral-900 bg-neutral-900 text-white rounded hover:bg-neutral-800 transition-colors"
-          >
-            Admin
-          </Link>
         </div>
       </div>
     </header>
