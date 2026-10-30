@@ -14,7 +14,7 @@ export default function Footer() {
               An independent, hyper-local food and street dining publication focused on the culinary heritage, hidden stalls, and modern cafes of Lucknow, Uttar Pradesh.
             </p>
             <div className="text-xs text-neutral-500 font-mono">
-              Curated on-ground & engineered by <span className="text-neutral-900 font-semibold">Ritik Singh</span>.
+              Curated on-ground &amp; engineered by <span className="text-neutral-900 font-semibold">Ritik Singh</span>.
             </div>
           </div>
 
@@ -25,7 +25,7 @@ export default function Footer() {
             </h4>
             <ul className="text-xs space-y-1.5 text-neutral-600">
               <li><Link href="/#street-food" className="hover:text-black transition-colors">Gomti Nagar Rolls</Link></li>
-              <li><Link href="/#biryani" className="hover:text-black transition-colors">Chowk Biryani & Kebabs</Link></li>
+              <li><Link href="/#biryani" className="hover:text-black transition-colors">Chowk Biryani &amp; Kebabs</Link></li>
               <li><Link href="/#cafes" className="hover:text-black transition-colors">Hazratganj Cafes</Link></li>
               <li><Link href="/#street-food" className="hover:text-black transition-colors">Aminabad Street Food</Link></li>
             </ul>
@@ -34,7 +34,7 @@ export default function Footer() {
           {/* Compliance & E-E-A-T */}
           <div className="space-y-2">
             <h4 className="text-xs font-mono uppercase tracking-wider text-neutral-900 font-bold">
-              Trust & Editorial
+              Trust &amp; Editorial
             </h4>
             <ul className="text-xs space-y-1.5 text-neutral-600">
               <li><Link href="/about" className="hover:text-black transition-colors">About Ritik Singh</Link></li>
@@ -47,10 +47,7 @@ export default function Footer() {
 
         {/* Bottom Attribution */}
         <div className="pt-8 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-3">
-          <p>© {new Date().getFullYear()} LucknowKaChaska (`food.ritiksingh.in`). All rights reserved.</p>
-          <p className="font-mono text-[11px] text-neutral-400">
-            Engineered with Next.js 15 • 100/100 Core Web Vitals
-          </p>
+          <p>© {new Date().getFullYear()} LucknowKaChaska. All rights reserved.</p>
         </div>
       </div>
     </footer>
