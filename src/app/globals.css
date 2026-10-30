@@ -7,6 +7,8 @@
   --foreground: #111827;
 }
 
+/* Force body to stay fixed at top 0 without Google's 40px shift */
+html,
 body {
   color: var(--foreground);
   background: var(--background);
@@ -15,25 +17,39 @@ body {
   -moz-osx-font-smoothing: grayscale;
   top: 0px !important;
   position: static !important;
+  margin-top: 0px !important;
+  padding-top: 0px !important;
 }
 
-/* Completely suppress Google Translate default banners & iframes */
+/* Completely kill the Google Translate Top Bar iframe */
 .goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+iframe.skiptranslate,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc,
 #goog-gt-tt,
 .goog-te-balloon-frame,
 .goog-tooltip,
 .goog-tooltip:hover {
   display: none !important;
   visibility: hidden !important;
+  height: 0px !important;
+  width: 0px !important;
+  max-height: 0px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
 }
 
+/* Suppress word highlights when translated */
 .goog-text-highlight {
   background: none !important;
   box-shadow: none !important;
 }
 
-/* High contrast custom scrollbar */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -12,6 +12,7 @@ declare global {
             pageLanguage: string;
             includedLanguages: string;
             autoDisplay?: boolean;
+            multilanguagePage?: boolean;
           },
           element: string
         ) => void;
@@ -24,7 +25,7 @@ export default function GoogleTranslate() {
   const [currentLang, setCurrentLang] = useState<"en" | "hi">("en");
 
   useEffect(() => {
-    // Check existing cookie
+    // 1. Check existing cookie
     const cookies = document.cookie.split(";");
     const transCookie = cookies.find((c) => c.trim().startsWith("googtrans="));
     if (transCookie && transCookie.includes("/en/hi")) {
@@ -33,7 +34,29 @@ export default function GoogleTranslate() {
       setCurrentLang("en");
     }
 
-    // Initialize hidden Google Translate element
+    // 2. Active Body Top-Shift Killer (Prevents Google from pushing header down)
+    const resetBodyShift = () => {
+      if (document.body.style.top && document.body.style.top !== "0px") {
+        document.body.style.setProperty("top", "0px", "important");
+      }
+      if (document.body.style.position && document.body.style.position !== "static") {
+        document.body.style.setProperty("position", "static", "important");
+      }
+      // Also remove any injected banner iframes
+      const banner = document.querySelector(".goog-te-banner-frame");
+      if (banner) {
+        banner.remove();
+      }
+    };
+
+    resetBodyShift();
+    const observer = new MutationObserver(resetBodyShift);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+
+    // 3. Initialize hidden Google Translate element
     window.googleTranslateElementInit = () => {
       if (window.google?.translate?.TranslateElement) {
         new window.google.translate.TranslateElement(
@@ -41,6 +64,7 @@ export default function GoogleTranslate() {
             pageLanguage: "en",
             includedLanguages: "en,hi",
             autoDisplay: false,
+            multilanguagePage: true,
           },
           "google_translate_hidden"
         );
@@ -55,6 +79,8 @@ export default function GoogleTranslate() {
       script.async = true;
       document.body.appendChild(script);
     }
+
+    return () => observer.disconnect();
   }, []);
 
   const switchLanguage = (lang: "en" | "hi") => {
