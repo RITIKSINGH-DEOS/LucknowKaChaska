@@ -24,7 +24,7 @@ export default function GoogleTranslate() {
   const [currentLang, setCurrentLang] = useState<"en" | "hi">("en");
 
   useEffect(() => {
-    // 1. Check existing cookie preference
+    // 1. Detect current language from cookies
     const cookies = document.cookie.split(";");
     const transCookie = cookies.find((c) => c.trim().startsWith("googtrans="));
     if (transCookie && transCookie.includes("/en/hi")) {
@@ -33,8 +33,8 @@ export default function GoogleTranslate() {
       setCurrentLang("en");
     }
 
-    // 2. Continuous Anti-Shift Guardian: keeps body top locked to 0
-    const resetBodyShift = () => {
+    // 2. Lock body at top: 0 to prevent any header hiding
+    const lockBodyAtTop = () => {
       if (document.body.style.top && document.body.style.top !== "0px") {
         document.body.style.setProperty("top", "0px", "important");
       }
@@ -47,14 +47,14 @@ export default function GoogleTranslate() {
       }
     };
 
-    resetBodyShift();
-    const observer = new MutationObserver(resetBodyShift);
+    lockBodyAtTop();
+    const observer = new MutationObserver(lockBodyAtTop);
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ["style", "class"],
     });
 
-    // 3. Initialize Google Translate with hidden target
+    // 3. Initialize Google Translate engine
     window.googleTranslateElementInit = () => {
       if (window.google?.translate?.TranslateElement) {
         new window.google.translate.TranslateElement(
@@ -80,40 +80,54 @@ export default function GoogleTranslate() {
     return () => observer.disconnect();
   }, []);
 
-  // Instant in-place smooth language switcher (Zero Page Reload!)
+  // Helper to completely purge all Google Translate cookies
+  const clearGoogleTranslateCookies = () => {
+    const hostname = window.location.hostname;
+    const domains = [
+      "",
+      hostname,
+      `.${hostname}`,
+      hostname.replace(/^www\./, ""),
+      `.${hostname.replace(/^www\./, "")}`,
+    ];
+
+    for (const d of domains) {
+      const domainStr = d ? `; domain=${d}` : "";
+      document.cookie = `googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT${domainStr}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT${domainStr}`;
+    }
+  };
+
   const switchLanguage = (targetLang: "en" | "hi") => {
     if (targetLang === currentLang) return;
     setCurrentLang(targetLang);
 
-    // Save cookie for persistence across pages
-    document.cookie = `googtrans=/en/${targetLang}; path=/;`;
-    if (window.location.hostname) {
-      document.cookie = `googtrans=/en/${targetLang}; path=/; domain=${window.location.hostname};`;
-      document.cookie = `googtrans=/en/${targetLang}; path=/; domain=.${window.location.hostname};`;
-    }
+    // Smooth soft fade before transition
+    document.body.style.transition = "opacity 0.15s ease-out";
+    document.body.style.opacity = "0.5";
 
-    // 1. Try instant in-place DOM translation via Google Translate Select Combo
-    const selectEl = document.querySelector<HTMLSelectElement>(".goog-te-combo");
-    if (selectEl) {
-      selectEl.value = targetLang === "hi" ? "hi" : "";
-      selectEl.dispatchEvent(new Event("change", { bubbles: true }));
-
-      // Also handle restoration if switching to English
-      if (targetLang === "en") {
-        // Click Google original banner close button if present
-        const closeBtn = document.querySelector<HTMLAnchorElement>(".goog-te-banner-frame .goog-close-link");
-        if (closeBtn) closeBtn.click();
+    if (targetLang === "hi") {
+      // Set cookie for Hindi
+      const hostname = window.location.hostname;
+      document.cookie = "googtrans=/en/hi; path=/;";
+      if (hostname) {
+        document.cookie = `googtrans=/en/hi; path=/; domain=${hostname};`;
+        document.cookie = `googtrans=/en/hi; path=/; domain=.${hostname};`;
       }
-      return;
+    } else {
+      // Completely erase cookies to restore original English
+      clearGoogleTranslateCookies();
     }
 
-    // 2. Fallback only if Google script hasn't mounted the combo element yet
-    window.location.reload();
+    // Fast soft reload (150ms)
+    setTimeout(() => {
+      window.location.reload();
+    }, 150);
   };
 
   return (
     <div className="flex items-center">
-      {/* Hidden off-screen anchor for Google Translate combo */}
+      {/* Hidden target for Google Translate script */}
       <div
         id="google_translate_hidden_target"
         className="fixed -top-[9999px] -left-[9999px] opacity-0 pointer-events-none"
