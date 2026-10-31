@@ -142,7 +142,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             The Editorial Commitment
           </span>
           <h3 className="text-xl font-bold mb-3 tracking-tight">
-            Curated on-ground by Ritik Singh
+            Curated on-ground by <a href="https://ritiksingh.in" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-neutral-300 transition-colors">Ritik Singh</a>
           </h3>
           <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">
             We don&apos;t scrape generic listicles or accept undisclosed paid placements. Every spot reviewed is visited, tasted, and cross-referenced with real Google Maps sentiment and neighborhood consensus.

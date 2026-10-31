@@ -18,7 +18,7 @@ export default function AboutPage() {
           About LucknowKaChaska<span className="text-neutral-400">.</span>
         </h1>
         <p className="text-sm text-neutral-600 leading-relaxed font-mono">
-          An independent food publication architected and curated by Ritik Singh.
+          An independent food publication architected and curated by <a href="https://ritiksingh.in" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-neutral-900">Ritik Singh</a>.
         </p>
       </div>
 
@@ -31,7 +31,7 @@ export default function AboutPage() {
           <strong>LucknowKaChaska</strong> was born out of a simple conviction: <em>Lucknow’s street food deserves rigorous, honest, and hyper-local documentation.</em>
         </p>
 
-        <h2 className="text-xl font-bold text-neutral-900 pt-4">About the Curator: Ritik Singh</h2>
+        <h2 className="text-xl font-bold text-neutral-900 pt-4">About the Curator: <a href="https://ritiksingh.in" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">Ritik Singh</a></h2>
         <p>
           I am a software engineer, SEO strategist, and lifelong food explorer born and raised around the culinary arteries of Lucknow. Whether it&apos;s mapping the best roll stalls across Gomti Nagar or finding early-morning nihari at Akbari Gate, every review on this platform is verified through direct on-ground experience.
         </p>

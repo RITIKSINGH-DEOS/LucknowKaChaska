@@ -170,7 +170,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
           </div>
           <div>
             <div className="font-bold text-neutral-900">
-              Curated by <Link href="/about" className="hover:underline">Ritik Singh</Link>
+              Curated by <a href="https://ritiksingh.in" target="_blank" rel="noopener noreferrer" className="hover:underline text-neutral-900 font-bold">Ritik Singh</a>
             </div>
             <div className="text-[11px] text-neutral-400">
               Updated: {new Date(post.updatedAt).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })} • Verified On-Ground
@@ -309,7 +309,7 @@ export default async function PostDetailPage({ params }: PostPageProps) {
             RS
           </div>
           <div className="space-y-1">
-            <h3 className="font-bold text-sm">Written &amp; Verified by Ritik Singh</h3>
+            <h3 className="font-bold text-sm">Written &amp; Verified by <a href="https://ritiksingh.in" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">Ritik Singh</a></h3>
             <p className="text-xs text-neutral-300 leading-relaxed">
               Software Architect &amp; Local Food Enthusiast based in Gomti Nagar, Lucknow. Every venue is evaluated for taste, hygiene, price transparency, and neighborhood reputation.
             </p>
