@@ -80,7 +80,7 @@ STRICT RULES:
   "slug": "kebab-case-slug",
   "metaDescription": "Clickable meta description (140-155 chars) with prices",
   "targetKeyword": "primary keyword",
-  "category": "Street Food | Biryani | Cafes | Breakfast",
+  "category": "Restaurants & Hotels | Street Food | Lucknowi Special | Cafes & Bakeries | Dhaba & Local Food",
   "area": "${area}",
   "readTime": "3 min read",
   "quickVerdict": "40-50 words quick snippet answer",
@@ -202,7 +202,7 @@ function generateDeterministicFallback(topic: string, area: string): GeneratedAr
     slug: cleanSlug,
     metaDescription: `Discover the top-rated food spots in ${area}, Lucknow with verified 2026 prices, landmark locations, and authentic street recommendations by Ritik Singh.`,
     targetKeyword: `best food in ${area.toLowerCase()} lucknow`,
-    category: isRollTopic ? "Street Food" : isBiryani ? "Biryani" : "Dining",
+    category: isRollTopic ? "Street Food" : isBiryani ? "Lucknowi Special" : "Restaurants & Hotels",
     area: area,
     readTime: "3 min read",
     quickVerdict: isRollTopic
