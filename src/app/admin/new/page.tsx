@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CATEGORIES } from "@/lib/categories";
 
 interface ComparisonRow {
   spotName: string;
@@ -340,11 +341,15 @@ export default function NewPostPage() {
               onChange={(e) => setCategory(e.target.value)}
               className="w-full text-xs p-2.5 border border-neutral-300 rounded focus:border-neutral-900 outline-none bg-white"
             >
-              <option value="Street Food">Street Food</option>
-              <option value="Biryani">Biryani &amp; Kebabs</option>
-              <option value="Cafes">Cafes &amp; Rooftops</option>
-              <option value="Breakfast">Breakfast &amp; Khasta</option>
-              <option value="Dining">Fine Dining</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+
+
+
+
             </select>
           </div>
           <div>
