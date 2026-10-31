@@ -14,7 +14,15 @@ export default function Footer() {
               An independent, hyper-local food and street dining publication focused on the culinary heritage, hidden stalls, and modern cafes of Lucknow, Uttar Pradesh.
             </p>
             <div className="text-xs text-neutral-500 font-mono">
-              Curated on-ground &amp; engineered by <span className="text-neutral-900 font-semibold">Ritik Singh</span>.
+              Curated on-ground &amp; engineered by{" "}
+              <a
+                href="https://ritiksingh.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-900 font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity"
+              >
+                Ritik Singh
+              </a>.
             </div>
           </div>
 
